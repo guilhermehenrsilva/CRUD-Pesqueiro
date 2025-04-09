@@ -2,8 +2,8 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-require 'conexao.php';
-require 'verifica_login.php';
+require '../sistema/conexao.php';
+require '../sistema/verifica_login.php';
 
 $sql = 'SELECT * FROM estoque';
 $result = mysqli_query($conexao, $sql);
@@ -18,9 +18,9 @@ $result = mysqli_query($conexao, $sql);
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   </head>
   <body>
-    <?php include('navbar.php'); ?>
+    <?php include('../sistema/navbar.php'); ?>
     <div class="container mt-4">
-      <?php include('mensagem.php'); ?>
+      <?php include('../sistema/mensagem.php'); ?>
       <div class="row">
         <div class="col-md-12">
           <div class="card">
@@ -56,7 +56,7 @@ $result = mysqli_query($conexao, $sql);
                             <a href="estoque-edit.php?id=<?= $produto['id'] ?>" class="btn btn-success btn-sm">
                               <span class="bi-pencil-fill"></span> Editar
                             </a>
-                            <form action="acoes.php" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir?')" class="d-inline">
+                            <form action="../acoes.php" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir?')" class="d-inline">
                               <button type="submit" name="delete_estoque" value="<?= $produto['id'] ?>" class="btn btn-danger btn-sm">
                                 <span class="bi-trash3-fill"></span> Excluir
                               </button>

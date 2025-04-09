@@ -1,6 +1,6 @@
 <?php
-require 'verifica_login.php';
-require 'conexao.php';
+require '../sistema/verifica_login.php';
+require '../sistema/conexao.php';
 
 if (!isset($_GET['id'])) {
     $_SESSION['mensagem'] = 'ID do produto não fornecido.';
@@ -30,7 +30,7 @@ $produto = mysqli_fetch_assoc($result);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
   </head>
   <body>
-    <?php include('navbar.php'); ?>
+    <?php include('../Sistema/navbar.php'); ?>
     
     <div class="container mt-5">
         <div class="row">
@@ -42,7 +42,7 @@ $produto = mysqli_fetch_assoc($result);
                         </h4>
                     </div>
                     <div class="card-body">
-                        <form action="acoes.php" method="POST">
+                        <form action="../acoes.php" method="POST">
                             <input type="hidden" name="estoque_id" value="<?= htmlspecialchars($produto['id']); ?>">
 
                             <div class="mb-3">

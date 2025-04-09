@@ -1,17 +1,17 @@
 <?php
-require 'conexao.php';
-require 'verifica_login.php';
+require '../sistema/conexao.php';
+require '../sistema/verifica_login.php';
 ?>
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Usuario - View</title>
+    <title>Usuário - Visualizar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
   </head>
   <body>
-    <?php include ('navbar.php'); ?>
+    <?php include ('../sistema/navbar.php'); ?>
     
     <div class="container mt-5">
         <div class="row">
@@ -31,37 +31,36 @@ require 'verifica_login.php';
 
                                 if (mysqli_num_rows($query) > 0) {
                                     $usuario = mysqli_fetch_array($query);
-                            ?>
+                        ?>
                             <div class="mb-3">
                                 <label>Nome</label>
                                 <p class="form-control">
-                                    <?=$usuario['nome'];?>
+                                    <?= htmlspecialchars($usuario['nome']); ?>
                                 </p>                                
                             </div>
                             <div class="mb-3">
                                 <label>Email</label>
                                 <p class="form-control">
-                                    <?=$usuario['email'];?>
+                                    <?= htmlspecialchars($usuario['email']); ?>
                                 </p>                                
                             </div>
                             <div class="mb-3">
                                 <label>Data Nascimento</label>
                                 <p class="form-control">
-                                    <?=date('d/m/Y',strtotime($usuario['data_nascimento']));?>
+                                    <?= date('d/m/Y', strtotime($usuario['data_nascimento'])); ?>
                                 </p>                                
                             </div>
-                           <?php
-                           } else {
-                               echo "<h5>Usuário não encontrado</h5>";
-                           }
-                        } 
-                         ?>
+                        <?php
+                                } else {
+                                    echo "<h5>Usuário não encontrado</h5>";
+                                }
+                            } 
+                        ?>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
   </body>

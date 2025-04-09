@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'conexao.php';
+require 'sistema/conexao.php';
 
 /** CRIAÇÃO DE USUÁRIO **/
 if (isset($_POST['create_usuario'])) {
@@ -12,7 +12,7 @@ if (isset($_POST['create_usuario'])) {
 
     if (empty($nome) || empty($email) || empty($data_nascimento) || empty($senha)) {
         $_SESSION['mensagem'] = "Não foi possível incluir um usuário no banco.";
-        header("Location: index.php");
+        header("Location: usuarios/usuarios.php");
         exit;
     }
 
@@ -24,7 +24,7 @@ if (isset($_POST['create_usuario'])) {
         $_SESSION['mensagem'] = "Não foi possível incluir um usuário no banco.";
     }
 
-    header("Location: index.php");
+    header("Location: usuarios/usuarios.php");
     exit;
 }
 
@@ -53,7 +53,7 @@ if (isset($_POST['update_usuario'])) {
         $_SESSION['mensagem'] = 'Usuário não foi atualizado';
     }
 
-    header('Location: index.php');
+    header('Location: usuarios/usuarios.php');
     exit;
 }
 
@@ -69,7 +69,7 @@ if (isset($_POST['delete_usuario'])) {
         $_SESSION['mensagem'] = 'Usuário não foi excluído';
     }
 
-    header('Location: index.php');
+    header('Location: usuarios/usuarios.php');
     exit;
 }
 
@@ -81,7 +81,7 @@ if (isset($_POST['create_estoque'])) {
 
     if (empty($nome_produto) || empty($quantidade) || empty($preco_unitario)) {
         $_SESSION['mensagem'] = "Todos os campos são obrigatórios.";
-        header("Location: estoque-create.php");
+        header("Location: estoque/estoque-create.php");
         exit;
     }
 
@@ -93,7 +93,7 @@ if (isset($_POST['create_estoque'])) {
         $_SESSION['mensagem'] = "Erro ao adicionar produto ao estoque.";
     }
 
-    header("Location: estoque.php");
+    header("Location: estoque/estoque.php");
     exit;
 }
 
@@ -106,7 +106,7 @@ if (isset($_POST['update_estoque'])) {
 
     if (empty($nome_produto) || empty($quantidade) || empty($preco_unitario)) {
         $_SESSION['mensagem'] = "Todos os campos são obrigatórios.";
-        header("Location: estoque-edit.php?id=$estoque_id");
+        header("Location: estoque/estoque-edit.php?id=$estoque_id");
         exit;
     }
 
@@ -119,7 +119,7 @@ if (isset($_POST['update_estoque'])) {
         $_SESSION['mensagem'] = "Produto não foi atualizado.";
     }
 
-    header("Location: estoque.php");
+    header("Location: estoque/estoque.php");
     exit;
 }
 
@@ -135,7 +135,79 @@ if (isset($_POST['delete_estoque'])) {
         $_SESSION['mensagem'] = "Erro ao excluir o produto.";
     }
 
-    header("Location: estoque.php");
+    header("Location: estoque/estoque.php");
     exit;
 }
+
+/** CRIAÇÃO DE VENDA **/
+if (isset($_POST['create_venda'])) {
+    $id_produto = mysqli_real_escape_string($conexao, $_POST['id_produto']);
+    $quantidade = mysqli_real_escape_string($conexao, $_POST['quantidade']);
+    $data_venda = mysqli_real_escape_string($conexao, $_POST['data_venda']);
+
+    // Verificar se o produto existe e se tem quantidade suficiente
+    $consulta = mysqli_query($conexao, "SELECT quantidade FROM estoque WHERE id = '$id_produto'");
+    $produto = mysqli_fetch_assoc($consulta);
+
+    if (!$produto || $produto['quantidade'] < $quantidade) {
+        $_SESSION['mensagem'] = "Produto inexistente ou quantidade insuficiente no estoque.";
+        header("Location: vendas/venda-create.php");
+        exit;
+    }
+
+    // Registrar a venda
+    $sql = "INSERT INTO vendas (id_produto, quantidade, data_venda) VALUES ('$id_produto', '$quantidade', '$data_venda')";
+    if (mysqli_query($conexao, $sql)) {
+        // Atualizar o estoque
+        $nova_quantidade = $produto['quantidade'] - $quantidade;
+        mysqli_query($conexao, "UPDATE estoque SET quantidade = '$nova_quantidade' WHERE id = '$id_produto'");
+        $_SESSION['mensagem'] = "Venda registrada com sucesso!";
+    } else {
+        $_SESSION['mensagem'] = "Erro ao registrar a venda.";
+    }
+
+    header("Location: vendas/vendas.php");
+    exit;
+}
+
+// EXCLUIR VENDA
+if (isset($_POST['delete_venda'])) {
+    $id_venda = mysqli_real_escape_string($conexao, $_POST['delete_venda']);
+
+    // Verifica se o usuário é administrador
+    if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1) {
+        // Recuperar os dados da venda antes de excluir (para devolver ao estoque)
+        $query_venda = "SELECT id_produto, quantidade FROM vendas WHERE id = '$id_venda'";
+        $result_venda = mysqli_query($conexao, $query_venda);
+
+        if ($result_venda && mysqli_num_rows($result_venda) > 0) {
+            $venda = mysqli_fetch_assoc($result_venda);
+            $id_produto = $venda['id_produto'];
+            $quantidade_vendida = $venda['quantidade'];
+
+            // Devolver a quantidade ao estoque
+            $query_update_estoque = "UPDATE estoque SET quantidade = quantidade + $quantidade_vendida WHERE id = '$id_produto'";
+            mysqli_query($conexao, $query_update_estoque);
+
+            // Excluir a venda
+            $query_delete = "DELETE FROM vendas WHERE id = '$id_venda'";
+            $result_delete = mysqli_query($conexao, $query_delete);
+
+            if ($result_delete) {
+                $_SESSION['mensagem'] = "Venda excluída com sucesso!";
+            } else {
+                $_SESSION['mensagem'] = "Erro ao excluir a venda.";
+            }
+        } else {
+            $_SESSION['mensagem'] = "Venda não encontrada.";
+        }
+    } else {
+        $_SESSION['mensagem'] = "Você não tem permissão para excluir vendas.";
+    }
+
+    header("Location: vendas/vendas.php");
+    exit();
+}
+
+
 ?>

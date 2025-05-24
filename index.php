@@ -1,23 +1,34 @@
 <?php
 session_start();
-require 'sistema/conexao.php';
 
 if (isset($_POST['entrar'])) {
     $email = $_POST['email'];
     $senha = $_POST['senha'];
 
-    $query = "SELECT * FROM usuarios WHERE email = ?";
-    $stmt = mysqli_prepare($conexao, $query);
-    mysqli_stmt_bind_param($stmt, "s", $email);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
+    // Dados do Supabase
+    $url = "https://dxvanyhmpiosibjhnxpq.supabase.co/rest/v1/usuarios?email=eq.$email";
+    $apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4dmFueWhtcGlvc2liamhueHBxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQxNTkxMDgsImV4cCI6MjA1OTczNTEwOH0.rjQAET7doqcGLSZcSJ1vb05wm7RfhV-5R0e8nquexeM";
 
-    if ($usuario = mysqli_fetch_assoc($result)) {
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "apikey: $apiKey",
+        "Authorization: Bearer $apiKey",
+        "Content-Type: application/json"
+    ]);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    $usuarios = json_decode($response, true);
+
+    if ($usuarios && count($usuarios) > 0) {
+        $usuario = $usuarios[0];
         if (password_verify($senha, $usuario['senha'])) {
             $_SESSION['usuario_id'] = $usuario['id'];
             $_SESSION['usuario_nome'] = $usuario['nome'];
-            $_SESSION['is_admin'] = $usuario['is_admin']; 
-            header("Location: home.php"); // Redireciona para a home após login
+            $_SESSION['is_admin'] = $usuario['is_admin'];
+            header("Location: home.php");
             exit;
         } else {
             $erro = "Senha incorreta!";

@@ -10,7 +10,7 @@ require '../sistema/verifica_login.php';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
   </head>
   <body>
-    <?php include ('../Sistema/navbar.php'); ?>
+    <?php include ('../sistema/navbar.php'); ?>
     
     <div class="container mt-5">
         <div class="row">
@@ -18,7 +18,7 @@ require '../sistema/verifica_login.php';
                 <div class="card">
                     <div class="card-header">
                         <h4>Adicionar Usuário
-                            <a href="index.php" class="btn btn-danger float-end">Voltar</a>
+                            <a href="../usuarios/usuarios.php" class="btn btn-danger float-end">Voltar</a>
                         </h4>
                     </div>
                     <div class="card-body">
@@ -54,5 +54,6 @@ require '../sistema/verifica_login.php';
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+
   </body>
 </html>

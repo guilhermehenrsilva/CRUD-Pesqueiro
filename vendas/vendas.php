@@ -4,29 +4,37 @@ require '../sistema/verifica_login.php';
 include '../sistema/navbar.php';
 include '../sistema/mensagem.php';
 
-// Consulta principal das vendas
-$sql = "SELECT v.id, e.nome_produto AS produto, v.quantidade, e.preco_unitario, v.data_venda
-        FROM vendas v
-        INNER JOIN estoque e ON v.id_produto = e.id
-        ORDER BY v.data_venda DESC";
+// Função para requisição GET do Supabase
+function supabaseGET($endpoint, $query = '') {
+    global $supabaseUrl, $supabaseKey;
 
-$vendas = mysqli_query($conexao, $sql);
+    $url = $supabaseUrl . "/rest/v1/$endpoint" . $query;
+    $headers = [
+        "apikey: $supabaseKey",
+        "Authorization: Bearer $supabaseKey"
+    ];
 
-// Consulta para total de vendas por produto
-$sql_totais = "SELECT e.nome_produto, SUM(v.quantidade * e.preco_unitario) AS total_vendido
-               FROM vendas v
-               INNER JOIN estoque e ON v.id_produto = e.id
-               GROUP BY e.nome_produto";
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    $response = curl_exec($curl);
+    curl_close($curl);
+    return json_decode($response, true);
+}
 
-$totais_por_produto = mysqli_query($conexao, $sql_totais);
+// Buscar vendas com informações dos produtos e vendedores
+$vendas = supabaseGET("vendas?select=id,id_produto,id_vendedor,quantidade,data_venda,estoque(id,nome_produto,preco_unitario),vendedores(id,nome)&order=data_venda.desc");
 
-// Cálculo do total geral
-$total_geral = 0;
+// Calcular total por produto
 $totais = [];
-if ($totais_por_produto) {
-    while ($linha = mysqli_fetch_assoc($totais_por_produto)) {
-        $total_geral += $linha['total_vendido'];
-        $totais[$linha['nome_produto']] = $linha['total_vendido'];
+$total_geral = 0;
+
+if ($vendas) {
+    foreach ($vendas as $v) {
+        $produto = $v['estoque']['nome_produto'];
+        $subtotal = $v['quantidade'] * $v['estoque']['preco_unitario'];
+        $totais[$produto] = ($totais[$produto] ?? 0) + $subtotal;
+        $total_geral += $subtotal;
     }
 }
 ?>
@@ -60,34 +68,36 @@ if ($totais_por_produto) {
               <th>Quantidade</th>
               <th>Preço Unitário</th>
               <th>Data da Venda</th>
+              <th>Vendedor</th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody>
-            <?php if (mysqli_num_rows($vendas) > 0): ?>
-              <?php mysqli_data_seek($vendas, 0); ?>
-              <?php while ($v = mysqli_fetch_assoc($vendas)): ?>
+            <?php if (!empty($vendas)): ?>
+              <?php foreach ($vendas as $v): ?>
                 <tr>
                   <td><?= $v['id'] ?></td>
-                  <td><?= $v['produto'] ?></td>
+                  <td><?= $v['estoque']['nome_produto'] ?></td>
                   <td><?= $v['quantidade'] ?></td>
-                  <td>R$ <?= number_format($v['preco_unitario'], 2, ',', '.') ?></td>
-                  <td><?= date('d/m/Y H:i', strtotime($v['data_venda'])) ?></td>
+                  <td>R$ <?= number_format($v['estoque']['preco_unitario'], 2, ',', '.') ?></td>
+                  <td><?= date('d/m/Y', strtotime($v['data_venda'])) ?></td>
+                  <td><?= $v['vendedores']['nome'] ?? 'N/A' ?></td>
                   <td>
                     <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
                       <form action="../acoes.php" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta venda?')">
-                        <input type="hidden" name="delete_venda" value="<?= $v['id'] ?>">
-                        <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                        <input type="hidden" name="id_venda" value="<?= $v['id'] ?>">
+                        <button type="submit" name="delete_venda" class="btn btn-danger btn-sm">Excluir</button>
+
                       </form>
                     <?php else: ?>
                       <span class="text-muted">Somente admin</span>
                     <?php endif; ?>
                   </td>
                 </tr>
-              <?php endwhile; ?>
+              <?php endforeach; ?>
             <?php else: ?>
               <tr>
-                <td colspan="6" class="text-center">Nenhuma venda registrada.</td>
+                <td colspan="7" class="text-center">Nenhuma venda registrada.</td>
               </tr>
             <?php endif; ?>
           </tbody>
@@ -124,5 +134,7 @@ if ($totais_por_produto) {
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+  <?php include '../sistema/footer.php'; ?>
+
 </body>
 </html>

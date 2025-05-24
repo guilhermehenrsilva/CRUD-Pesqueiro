@@ -8,17 +8,36 @@ if (!isset($_GET['id'])) {
     exit;
 }
 
-$id = mysqli_real_escape_string($conexao, $_GET['id']);
-$sql = "SELECT * FROM estoque WHERE id = '$id'";
-$result = mysqli_query($conexao, $sql);
+$id = $_GET['id'];
 
-if (!$result || mysqli_num_rows($result) != 1) {
+// Requisição para buscar o produto no Supabase
+$url = $supabaseUrl . "/rest/v1/estoque?id=eq.$id";
+$headers = [
+    "apikey: $supabaseKey",
+    "Authorization: Bearer $supabaseKey"
+];
+
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$response = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+if ($httpCode !== 200) {
+    $_SESSION['mensagem'] = 'Erro ao buscar produto no Supabase.';
+    header('Location: estoque.php');
+    exit;
+}
+
+$produtos = json_decode($response, true);
+if (!$produtos || count($produtos) === 0) {
     $_SESSION['mensagem'] = 'Produto não encontrado.';
     header('Location: estoque.php');
     exit;
 }
 
-$produto = mysqli_fetch_assoc($result);
+$produto = $produtos[0];
 ?>
 
 <!doctype html>
@@ -30,7 +49,7 @@ $produto = mysqli_fetch_assoc($result);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
   </head>
   <body>
-    <?php include('../Sistema/navbar.php'); ?>
+    <?php include('../sistema/navbar.php'); ?>
     
     <div class="container mt-5">
         <div class="row">
@@ -71,5 +90,7 @@ $produto = mysqli_fetch_assoc($result);
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+    
+
   </body>
 </html>

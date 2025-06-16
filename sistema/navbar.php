@@ -23,18 +23,10 @@ if (session_status() === PHP_SESSION_NONE) {
         <li class="nav-item">
           <a class="nav-link" href="../vendas/vendas.php">Vendas</a>
         </li>
-        <?php if (!empty($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Admin
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-            <li><a class="dropdown-item" href="../usuarios/usuarios.php">Gerenciar Usuários</a></li>
-            <li><a class="dropdown-item" href="../estoque/estoque.php">Gerenciar Estoque</a></li>
-            <li><a class="dropdown-item" href="../vendas/vendas.php">Relatórios de Vendas</a></li>
-          </ul>
+        <li class="nav-item">
+          <a class="nav-link" href="../vendedores/vendedores.php">Vendedores</a>
         </li>
-        <?php endif; ?>
+        
       </ul>
 
       <div class="d-flex align-items-center">

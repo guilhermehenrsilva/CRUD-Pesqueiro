@@ -54,7 +54,7 @@ require '../sistema/verifica_login.php';
             curl_close($ch);
             ?>
 
-            <form action="../acoes.php" method="POST">
+            <form action="../vendas-acoes.php" method="POST">
               <div class="mb-3">
                 <label>Produto</label>
                 <select name="id_produto" class="form-select" required>

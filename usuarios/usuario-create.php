@@ -22,7 +22,7 @@ require '../sistema/verifica_login.php';
                         </h4>
                     </div>
                     <div class="card-body">
-                        <form action="../acoes.php" method="POST">
+                        <form action="../usuarios/usuarios-acoes.php" method="POST">
                             <div class="mb-3">
                                 <label>Nome</label>
                                 <input type="text" name="nome" class="form-control" required>

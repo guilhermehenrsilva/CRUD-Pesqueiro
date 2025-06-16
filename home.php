@@ -75,7 +75,7 @@ if (!isset($_SESSION['usuario_id'])) {
           <h5 class="card-title">Vendedores</h5>
           <p class="card-text">Gerencie os vendedores responsáveis pelas vendas.</p>
           <div class="mt-auto">
-            <a href="vendas/vendedores.php" class="btn btn-secondary w-100">
+            <a href="vendedores/vendedores.php" class="btn btn-secondary w-100">
               <i class="bi bi-person-badge-fill"></i> Ir para Vendedores
             </a>
           </div>

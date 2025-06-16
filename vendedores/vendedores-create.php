@@ -35,7 +35,7 @@ require '../sistema/verifica_login.php';
             // No momento não há necessidade de cURL aqui, mas deixamos o espaço para consistência
             ?>
 
-            <form action="../acoes.php" method="POST">
+            <form action="../vendedores-acoes.php" method="POST">
               <div class="mb-3">
                 <label for="nome_vendedor">Nome do Vendedor</label>
                 <input type="text" name="nome_vendedor" class="form-control" required>

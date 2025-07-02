@@ -16,7 +16,7 @@
     <div class="card mb-4">
       <div class="card-header">
         <h4>Lista de Vendas
-          <a href="/vendas/create" class="btn btn-primary float-end">Nova Venda</a>
+          <a href="<?= BASE_URL ?>/venda/create" class="btn btn-primary float-end">Nova Venda</a>
         </h4>
       </div>
       <div class="card-body">
@@ -44,10 +44,9 @@
                   <td><?= $v['vendedores']['nome'] ?? 'N/A' ?></td>
                   <td>
                     <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
-                      <form action="/vendas/delete" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta venda?')">
+                      <form action="<?= BASE_URL ?>/venda/delete" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta venda?')">
                         <input type="hidden" name="id_venda" value="<?= $v['id'] ?>">
                         <button type="submit" name="delete_venda" class="btn btn-danger btn-sm">Excluir</button>
-
                       </form>
                     <?php else: ?>
                       <span class="text-muted">Somente admin</span>
@@ -65,7 +64,6 @@
       </div>
     </div>
 
-    <!-- TOTAIS POR PRODUTO -->
     <div class="card mb-4">
       <div class="card-header bg-success text-white">
         <h5>Totais por Produto</h5>
@@ -86,7 +84,6 @@
       </div>
     </div>
 
-    <!-- TOTAL GERAL -->
     <div class="alert alert-info text-end">
       <strong>Total Geral de Vendas: R$ <?= number_format($total_geral, 2, ',', '.') ?></strong>
     </div>

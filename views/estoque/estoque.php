@@ -16,7 +16,7 @@
           <div class="card">
             <div class="card-header">
               <h4>Estoque
-                <a href="/estoque/create" class="btn btn-primary float-end">Adicionar Produto</a>
+                <a href="<?= BASE_URL ?>/estoque/create" class="btn btn-primary float-end">Adicionar Produto</a>
               </h4>
             </div>
             <div class="card-body">
@@ -40,14 +40,15 @@
                         <td>R$ <?= number_format($produto['preco_unitario'], 2, ',', '.') ?></td>
                         <td>
                           <div class="d-flex justify-content-center gap-1 flex-wrap">
-                            <a href="/estoque/view/<?= $produto['id'] ?>" class="btn btn-secondary btn-sm">
+                            <a href="<?= BASE_URL ?>/estoque/view/<?= $produto['id'] ?>" class="btn btn-secondary btn-sm">
                               <span class="bi-eye-fill"></span> Visualizar
                             </a>
-                            <a href="/estoque/edit/<?= $produto['id'] ?>" class="btn btn-success btn-sm">
+                            <a href="<?= BASE_URL ?>/estoque/edit/<?= $produto['id'] ?>" class="btn btn-success btn-sm">
                                 <span class="bi-pencil-fill"></span> Editar
                             </a>
-                            <form action="estoque-acoes.php" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir?')" class="d-inline">
-                              <button type="submit" name="delete_estoque" value="<?= $produto['id'] ?>" class="btn btn-danger btn-sm">
+                            <form action="<?= BASE_URL ?>/estoque/delete" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir?')" class="d-inline">
+                              <input type="hidden" name="delete_estoque" value="<?= $produto['id'] ?>">
+                              <button type="submit" class="btn btn-danger btn-sm">
                                 <span class="bi-trash3-fill"></span> Excluir
                               </button>
                             </form>

@@ -17,11 +17,11 @@
         <div class="card">
           <div class="card-header">
             <h4>Registrar Venda
-              <a href="/vendas" class="btn btn-danger float-end">Voltar</a>
+              <a href="<?= BASE_URL ?>/venda" class="btn btn-danger float-end">Voltar</a>
             </h4>
           </div>
           <div class="card-body">
-            <form action="/vendas/create" method="POST">
+            <form action="<?= BASE_URL ?>/venda/create" method="POST">
               <div class="mb-3">
                 <label>Produto</label>
                 <select name="id_produto" class="form-select" required>

@@ -15,11 +15,11 @@
         <div class="card">
           <div class="card-header">
             <h4>Visualizar Vendedor
-              <a href="/vendedores" class="btn btn-danger float-end">Voltar</a>
+              <a href="<?= BASE_URL ?>/vendedor" class="btn btn-danger float-end">Voltar</a>
             </h4>
           </div>
           <div class="card-body">
-            <?php if ($vendedor): ?>
+            <?php if (isset($vendedor) && $vendedor): ?>
               <div class="mb-3">
                 <label>Nome</label>
                 <p class="form-control"><?= htmlspecialchars($vendedor['nome']); ?></p>

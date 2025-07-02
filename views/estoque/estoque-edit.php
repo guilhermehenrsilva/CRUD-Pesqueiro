@@ -15,11 +15,11 @@
                 <div class="card">
                     <div class="card-header">
                         <h4>Editar Produto no Estoque
-                            <a href="/estoque" class="btn btn-danger float-end">Voltar</a>
+                            <a href="<?= BASE_URL ?>/estoque" class="btn btn-danger float-end">Voltar</a>
                         </h4>
                     </div>
                     <div class="card-body">
-                        <form action="/estoque/edit" method="POST">
+                        <form action="<?= BASE_URL ?>/estoque/edit/<?= $produto['id'] ?>" method="POST">
                             <input type="hidden" name="estoque_id" value="<?= htmlspecialchars($produto['id']); ?>">
 
                             <div class="mb-3">
@@ -48,7 +48,5 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
-    
-
   </body>
 </html>

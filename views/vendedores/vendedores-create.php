@@ -1,5 +1,3 @@
-
-
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -18,21 +16,14 @@
         <div class="card">
           <div class="card-header">
             <h4>Cadastrar Novo Vendedor
-              <a href="/vendedores" class="btn btn-danger float-end">Voltar</a>
+              <a href="<?= BASE_URL ?>/vendedor" class="btn btn-danger float-end">Voltar</a>
             </h4>
           </div>
           <div class="card-body">
-
-            <?php
-            // Aqui você pode futuramente consultar vendedores, por exemplo para evitar duplicados
-            // Exemplo: checar se e-mail já existe
-            // No momento não há necessidade de cURL aqui, mas deixamos o espaço para consistência
-            ?>
-
-            <form action="/vendedores/create" method="POST">
+            <form action="<?= BASE_URL ?>/vendedor/create" method="POST">
               <div class="mb-3">
                 <label for="nome_vendedor">Nome do Vendedor</label>
-                <input type="text" name="nome_vendedor" class="form-control" required>
+                <input type="text" name="nome" class="form-control" required>
               </div>
 
               <div class="mb-3">

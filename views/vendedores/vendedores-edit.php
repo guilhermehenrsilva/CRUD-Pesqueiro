@@ -1,5 +1,3 @@
-
-
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -18,17 +16,17 @@
         <div class="card">
           <div class="card-header">
             <h4>Editar Vendedor
-              <a href="/vendedores" class="btn btn-danger float-end">Voltar</a>
+              <a href="<?= BASE_URL ?>/vendedor" class="btn btn-danger float-end">Voltar</a>
             </h4>
           </div>
           <div class="card-body">
-            <?php if ($vendedor): ?>
-              <form action="/vendedores/edit" method="POST">
+            <?php if (isset($vendedor) && $vendedor): ?>
+              <form action="<?= BASE_URL ?>/vendedor/edit/<?= $vendedor['id'] ?>" method="POST">
                 <input type="hidden" name="vendedor_id" value="<?= $vendedor['id']; ?>">
 
                 <div class="mb-3">
                   <label class="form-label">Nome</label>
-                  <input type="text" class="form-control" name="nome_vendedor" value="<?= htmlspecialchars($vendedor['nome']); ?>" required>
+                  <input type="text" class="form-control" name="nome" value="<?= htmlspecialchars($vendedor['nome']); ?>" required>
                 </div>
 
                 <div class="mb-3">
@@ -43,7 +41,7 @@
 
                 <div class="d-flex justify-content-between">
                   <button type="submit" name="update_vendedor" class="btn btn-success">Salvar Alterações</button>
-                  <a href="/vendedores" class="btn btn-secondary">Cancelar</a>
+                  <a href="<?= BASE_URL ?>/vendedor" class="btn btn-secondary">Cancelar</a>
                 </div>
               </form>
             <?php else: ?>

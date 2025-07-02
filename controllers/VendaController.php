@@ -1,4 +1,5 @@
 <?php
+// Garante que apenas usuários logados possam acessar esta seção
 require_once __DIR__ . '/../system/verifica_login.php';
 require_once __DIR__ . '/../models/VendaModel.php';
 require_once __DIR__ . '/../models/EstoqueModel.php';
@@ -23,13 +24,15 @@ class VendaController {
 
         if ($vendas) {
             foreach ($vendas as $v) {
-                $produto = $v['estoque']['nome_produto'];
-                $subtotal = $v['quantidade'] * $v['estoque']['preco_unitario'];
-                $totais[$produto] = ($totais[$produto] ?? 0) + $subtotal;
-                $total_geral += $subtotal;
+                if (isset($v['estoque']['nome_produto'])) {
+                    $produto = $v['estoque']['nome_produto'];
+                    $subtotal = $v['quantidade'] * $v['estoque']['preco_unitario'];
+                    $totais[$produto] = ($totais[$produto] ?? 0) + $subtotal;
+                    $total_geral += $subtotal;
+                }
             }
         }
-        require_once __DIR__ . '/../views/vendas/vendas.php';
+        require_once PROJECT_ROOT . '/views/vendas/vendas.php';
     }
 
     public function create() {
@@ -43,7 +46,8 @@ class VendaController {
 
             if (!$produto || $produto['quantidade'] < $quantidade) {
                 $_SESSION['mensagem'] = "Produto inexistente ou quantidade insuficiente.";
-                header("Location: /vendas/create");
+                // CORRIGIDO
+                header("Location: " . BASE_URL . "/venda/create");
                 exit;
             }
 
@@ -62,12 +66,13 @@ class VendaController {
             } else {
                 $_SESSION['mensagem'] = "Erro ao registrar a venda.";
             }
-            header("Location: /vendas");
+            // CORRIGIDO
+            header("Location: " . BASE_URL . "/venda");
             exit;
         } else {
             $produtos = $this->estoqueModel->getAllEstoque('?quantidade=gt.0&select=id,nome_produto,quantidade');
             $vendedores = $this->vendedorModel->getAllVendedores('?select=id,nome');
-            require_once __DIR__ . '/../views/vendas/vendas-create.php';
+            require_once PROJECT_ROOT . '/views/vendas/vendas-create.php';
         }
     }
 
@@ -79,7 +84,8 @@ class VendaController {
 
             if (!$venda) {
                 $_SESSION['mensagem'] = "Venda não encontrada.";
-                header("Location: /vendas");
+                // CORRIGIDO
+                header("Location: " . BASE_URL . "/venda");
                 exit;
             }
 
@@ -88,22 +94,21 @@ class VendaController {
 
             $produto = $this->estoqueModel->getProdutoById($id_produto);
 
-            if (!$produto) {
-                $_SESSION['mensagem'] = "Produto não encontrado no estoque.";
-                header("Location: /vendas");
-                exit;
+            // A exclusão de uma venda deve restaurar o estoque, então não falhamos se o produto não existir mais.
+            // Apenas tentamos atualizar se ele for encontrado.
+            if ($produto) {
+                 $nova_qtd = $produto['quantidade'] + $quantidade_vendida;
+                 $this->estoqueModel->updateProduto($id_produto, ['quantidade' => $nova_qtd]);
             }
 
-            $nova_qtd = $produto['quantidade'] + $quantidade_vendida;
-
             if ($this->vendaModel->deleteVenda($id_venda)) {
-                $this->estoqueModel->updateProduto($id_produto, ['quantidade' => $nova_qtd]);
                 $_SESSION['mensagem'] = "Venda excluída com sucesso!";
             } else {
                 $_SESSION['mensagem'] = "Erro ao excluir a venda.";
             }
         }
-        header("Location: /vendas");
+        // CORRIGIDO
+        header("Location: " . BASE_URL . "/venda");
         exit;
     }
 }

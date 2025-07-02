@@ -1,4 +1,5 @@
 <?php
+// Garante que apenas usuários logados possam acessar esta seção
 require_once __DIR__ . '/../system/verifica_login.php';
 require_once __DIR__ . '/../models/EstoqueModel.php';
 require_once __DIR__ . '/../models/VendaModel.php'; // Para verificar vendas vinculadas
@@ -14,7 +15,7 @@ class EstoqueController {
 
     public function index() {
         $produtos = $this->estoqueModel->getAllEstoque();
-        require_once __DIR__ . '/../views/estoque/estoque.php';
+        require_once PROJECT_ROOT . '/views/estoque/estoque.php';
     }
 
     public function create() {
@@ -23,9 +24,10 @@ class EstoqueController {
             $quantidade = trim($_POST['quantidade']);
             $preco_unitario = trim($_POST['preco_unitario']);
 
-            if (empty($nome_produto) || empty($quantidade) || empty($preco_unitario)) {
+            if (empty($nome_produto) || !isset($quantidade) || !isset($preco_unitario)) {
                 $_SESSION['mensagem'] = "Todos os campos são obrigatórios.";
-                header("Location: /estoque/create");
+                // CORRIGIDO
+                header("Location: " . BASE_URL . "/estoque/create");
                 exit;
             }
 
@@ -38,19 +40,21 @@ class EstoqueController {
             } else {
                 $_SESSION['mensagem'] = "Erro ao adicionar produto.";
             }
-            header("Location: /estoque");
+            // CORRIGIDO
+            header("Location: " . BASE_URL . "/estoque");
             exit;
         } else {
-            require_once __DIR__ . '/../views/estoque/estoque-create.php';
+            require_once PROJECT_ROOT . '/views/estoque/estoque-create.php';
         }
     }
 
     public function edit($params) {
-        $id = $params[0] ?? null;
+        $id = $params[0] ?? $_POST['estoque_id'] ?? null;
 
         if (!$id) {
             $_SESSION['mensagem'] = 'ID do produto não fornecido.';
-            header('Location: /estoque');
+            // CORRIGIDO
+            header('Location: ' . BASE_URL . '/estoque');
             exit;
         }
 
@@ -59,9 +63,10 @@ class EstoqueController {
             $quantidade = trim($_POST['quantidade']);
             $preco_unitario = trim($_POST['preco_unitario']);
 
-            if (empty($id) || empty($nome_produto) || empty($quantidade) || empty($preco_unitario)) {
+            if (empty($id) || empty($nome_produto) || !isset($quantidade) || !isset($preco_unitario)) {
                 $_SESSION['mensagem'] = "Todos os campos são obrigatórios.";
-                header("Location: /estoque/edit/$id");
+                // CORRIGIDO
+                header("Location: " . BASE_URL . "/estoque/edit/$id");
                 exit;
             }
 
@@ -74,16 +79,18 @@ class EstoqueController {
             } else {
                 $_SESSION['mensagem'] = "Erro ao atualizar produto.";
             }
-            header("Location: /estoque");
+            // CORRIGIDO
+            header("Location: " . BASE_URL . "/estoque");
             exit;
         } else {
             $produto = $this->estoqueModel->getProdutoById($id);
             if (!$produto) {
                 $_SESSION['mensagem'] = 'Produto não encontrado.';
-                header('Location: /estoque');
+                // CORRIGIDO
+                header('Location: ' . BASE_URL . '/estoque');
                 exit;
             }
-            require_once __DIR__ . '/../views/estoque/estoque-edit.php';
+            require_once PROJECT_ROOT . '/views/estoque/estoque-edit.php';
         }
     }
 
@@ -92,17 +99,19 @@ class EstoqueController {
 
         if (!$id) {
             $_SESSION['mensagem'] = 'ID do produto não fornecido.';
-            header('Location: /estoque');
+            // CORRIGIDO
+            header('Location: ' . BASE_URL . '/estoque');
             exit;
         }
 
         $produto = $this->estoqueModel->getProdutoById($id);
         if (!$produto) {
             $_SESSION['mensagem'] = 'Produto não encontrado.';
-            header('Location: /estoque');
+            // CORRIGIDO
+            header('Location: ' . BASE_URL . '/estoque');
             exit;
         }
-        require_once __DIR__ . '/../views/estoque/estoque-view.php';
+        require_once PROJECT_ROOT . '/views/estoque/estoque-view.php';
     }
 
     public function delete() {
@@ -111,16 +120,17 @@ class EstoqueController {
 
             if (empty($estoque_id)) {
                 $_SESSION['mensagem'] = "ID inválido para exclusão.";
-                header("Location: /estoque");
+                // CORRIGIDO
+                header("Location: " . BASE_URL . "/estoque");
                 exit;
             }
 
-            // Verifica se existe alguma venda com esse produto
             $vendasVinculadas = $this->vendaModel->getAllVendas("?id_produto=eq.$estoque_id");
 
             if (!empty($vendasVinculadas)) {
                 $_SESSION['mensagem'] = "Não é possível excluir este produto. Existem vendas vinculadas a ele.";
-                header("Location: /estoque");
+                // CORRIGIDO
+                header("Location: " . BASE_URL . "/estoque");
                 exit;
             }
 
@@ -130,7 +140,8 @@ class EstoqueController {
                 $_SESSION['mensagem'] = "Erro ao excluir produto.";
             }
         }
-        header("Location: /estoque");
+        // CORRIGIDO
+        header("Location: " . BASE_URL . "/estoque");
         exit;
     }
 }

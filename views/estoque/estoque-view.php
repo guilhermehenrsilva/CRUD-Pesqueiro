@@ -15,7 +15,7 @@
         <div class="card">
           <div class="card-header">
             <h4>Visualizar Produto
-              <a href="/estoque" class="btn btn-danger float-end">Voltar</a>
+              <a href="<?= BASE_URL ?>/estoque" class="btn btn-danger float-end">Voltar</a>
             </h4>
           </div>
           <div class="card-body">

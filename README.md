@@ -4,39 +4,39 @@ Este projeto configura uma aplicação PHP para gerenciamento de um Pesqueiro (C
 
 ## Estrutura do Projeto
 
-meu_projeto_docker/
-├── CRUD-Pesqueiro/                 # Contém todo o código-fonte da aplicação PHP
-│   ├── config/                     # Configurações de conexão (ex: Supabase)
-│   │   └── conexao.php
-│   ├── controllers/                # Lógica de controle para diferentes módulos
-│   │   ├── EstoqueController.php
-│   │   ├── HomeController.php
-│   │   ├── LoginController.php
-│   │   ├── UsuarioController.php
-│   │   ├── VendaController.php
-│   │   └── VendedorController.php
-│   ├── models/                     # Modelos de dados para interação com o Supabase
-│   │   ├── EstoqueModel.php
-│   │   ├── UsuarioModel.php
-│   │   ├── VendaModel.php
-│   │   └── VendedorModel.php
-│   ├── system/                     # Arquivos de sistema (login, navbar, footer, mensagens, roteador)
-│   │   ├── footer.php
-│   │   ├── index.php               # Ponto de entrada e roteador principal
-│   │   ├── mensagem.php
-│   │   ├── navbar.php
-│   │   └── verifica_login.php
-│   └── views/                      # Arquivos de visualização (HTML/PHP)
-│       ├── estoque/
-│       ├── home.php
-│       ├── login/
-│       ├── usuarios/
-│       ├── vendas/
-│       └── vendedores/
-├── docker-compose.yml              # Define os serviços Docker do projeto
-├── Dockerfile                      # Configuração da imagem Docker da aplicação PHP
-└── README.md                       # Este arquivo
-
+    meu_projeto_docker/
+    ├── CRUD-Pesqueiro/                 # Contém todo o código-fonte da aplicação PHP
+    │   ├── config/                     # Configurações de conexão (ex: Supabase)
+    │   │   └── conexao.php
+    │   ├── controllers/                # Lógica de controle para diferentes módulos
+    │   │   ├── EstoqueController.php
+    │   │   ├── HomeController.php
+    │   │   ├── LoginController.php
+    │   │   ├── UsuarioController.php
+    │   │   ├── VendaController.php
+    │   │   └── VendedorController.php
+    │   ├── models/                     # Modelos de dados para interação com o Supabase
+    │   │   ├── EstoqueModel.php
+    │   │   ├── UsuarioModel.php
+    │   │   ├── VendaModel.php
+    │   │   └── VendedorModel.php
+    │   ├── system/                     # Arquivos de sistema (login, navbar, footer, mensagens, roteador)
+    │   │   ├── footer.php
+    │   │   ├── index.php               # Ponto de entrada e roteador principal
+    │   │   ├── mensagem.php
+    │   │   ├── navbar.php
+    │   │   └── verifica_login.php
+    │   └── views/                      # Arquivos de visualização (HTML/PHP)
+    │       ├── estoque/
+    │       ├── home.php
+    │       ├── login/
+    │       ├── usuarios/
+    │       ├── vendas/
+    │       └── vendedores/
+    ├── docker-compose.yml              # Define os serviços Docker do projeto
+    ├── Dockerfile                      # Configuração da imagem Docker da aplicação PHP
+    └── README.md                       # Este arquivo
+    
 
 ## Serviços
 

@@ -1,4 +1,4 @@
-# meu_projeto_docker - CRUD Pesqueiro
+CRUD Pesqueiro
 
 Este projeto configura uma aplicação PHP para gerenciamento de um Pesqueiro (CRUD para Estoque, Vendas, Usuários e Vendedores) utilizando Docker para o ambiente de desenvolvimento e o Supabase como backend de banco de dados.
 

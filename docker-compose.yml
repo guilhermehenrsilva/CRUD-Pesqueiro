@@ -1,0 +1,13 @@
+version: '3.8' 
+services:
+  app: 
+    build:
+      context: . 
+      dockerfile: Dockerfile 
+    container_name: php-app-pesqueiro 
+
+    ports:
+      - "8080:80"
+
+    volumes:
+      - ./CRUD-Pesqueiro:/var/www/html/CRUD-Pesqueiro 
